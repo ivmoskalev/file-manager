@@ -1,7 +1,8 @@
 import { goUp, changeDirectory, list } from "./navigation.js";
 import { osInfo } from "./osInfo.js";
 import { hashFile } from "./hash.js";
-import { cat, add, rn, cp, mv, rm } from './fileOperations.js';
+import { cat, add, rn, cp, mv, rm } from "./fileOperations.js";
+import { compressFile, decompressFile } from "./compress.js";
 
 export const commandDispatcher = async (input, showCurrentDirectory, username) => {
     const [command, ...args] = input.split(" ");
@@ -48,6 +49,12 @@ export const commandDispatcher = async (input, showCurrentDirectory, username) =
             break;
         case "rm":
             rm(args.join(" "), showCurrentDirectory);
+            break;
+        case "compress":
+            compressFile(args[0], args[1], showCurrentDirectory);
+            break;
+        case "decompress":
+            decompressFile(args[0], args[1], showCurrentDirectory);
             break;
         case ".exit":
             console.log(`Thank you for using File Manager, ${username}, goodbye!`);
