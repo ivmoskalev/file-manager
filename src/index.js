@@ -1,9 +1,6 @@
-// src/index.js
-
 import { createInterface } from "readline";
 import { homedir } from "os";
 import { chdir, cwd } from "process";
-import path from "path";
 import { commandDispatcher } from "./commands/commandDispatcher.js";
 
 const args = process.argv.slice(2);
