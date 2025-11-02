@@ -1,7 +1,7 @@
 import { goUp, changeDirectory, list } from "./navigation.js";
 import { osInfo } from "./osInfo.js";
 import { hashFile } from "./hash.js";
-import { cat, add, rn, cp, mv, rm } from "./fileOperations.js";
+import { cat, add, rn, cp, mv, rm, mkdir } from "./fileOperations.js";
 import { compressFile, decompressFile } from "./compress.js";
 
 export const commandDispatcher = async (input, showCurrentDirectory, username) => {
@@ -28,6 +28,9 @@ export const commandDispatcher = async (input, showCurrentDirectory, username) =
             break;
         case "add":
             add(args.join(" "), showCurrentDirectory);
+            break;
+        case "mkdir":
+            mkdir(args.join(" "), showCurrentDirectory);
             break;
         case "rn":
             rn(args[0], args[1], showCurrentDirectory);

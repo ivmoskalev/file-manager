@@ -1,5 +1,5 @@
-import { writeFile, rename, unlink } from "fs/promises";
-import { isAbsolute, join } from "path";
+import { writeFile, rename, unlink, mkdir as createDirectory } from "fs/promises";
+import { isAbsolute, join, basename, dirname } from "path";
 import { existsSync, createReadStream, createWriteStream } from "fs";
 
 export const cat = (filePath, showCurrentDirectory) => {
@@ -33,7 +33,7 @@ export const add = async (fileName, showCurrentDirectory) => {
 export const rn = async (oldPath, newFileName, showCurrentDirectory) => {
     try {
         const oldFilePath = isAbsolute(oldPath) ? oldPath : join(process.cwd(), oldPath);
-        const newFilePath = join(path.dirname(oldFilePath), newFileName);
+        const newFilePath = join(dirname(oldFilePath), newFileName);
         await rename(oldFilePath, newFilePath);
         console.log("File renamed successfully");
     } catch {
@@ -46,7 +46,7 @@ export const cp = (sourcePath, destinationPath) => {
     return new Promise((resolve, reject) => {
         const src = isAbsolute(sourcePath) ? sourcePath : join(process.cwd(), sourcePath);
         const destDir = isAbsolute(destinationPath) ? destinationPath : join(process.cwd(), destinationPath);
-        const dest = join(destDir, path.basename(src));
+        const dest = join(destDir, basename(src));
 
         if (!existsSync(src)) {
             reject(new Error("Operation failed"));
@@ -88,6 +88,18 @@ export const rm = async (filePath, showCurrentDirectory) => {
         const absolutePath = isAbsolute(filePath) ? filePath : join(process.cwd(), filePath);
         await unlink(absolutePath);
         console.log("File deleted successfully");
+    } catch {
+        console.log("Operation failed");
+    }
+    showCurrentDirectory();
+};
+
+export const mkdir = async (directoryName, showCurrentDirectory) => {
+    try {
+        if (!directoryName) throw new Error("Invalid directory name");
+        const dirPath = join(process.cwd(), directoryName);
+        await createDirectory(dirPath, { recursive: false });
+        console.log("Directory created successfully");
     } catch {
         console.log("Operation failed");
     }
