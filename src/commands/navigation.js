@@ -33,22 +33,19 @@ export const changeDirectory = async (dir, showCurrentDirectory) => {
 
 export const list = async (showCurrentDirectory) => {
     try {
-        const files = await readdir(cwd(), { withFileTypes: true });
+        const items = await readdir(cwd(), { withFileTypes: true });
 
-        const directories = [];
-        const filesList = [];
+        const directories = items
+            .filter((item) => item.isDirectory())
+            .map((dir) => ({ Name: dir.name, Type: "directory" }))
+            .sort((a, b) => a.Name.localeCompare(b.Name));
 
-        for (const dirent of files) {
-            if (dirent.isDirectory()) {
-                directories.push({ Name: dirent.name, Type: "directory" });
-            } else if (dirent.isFile()) {
-                directories.push({ Name: dirent.name, Type: "file" });
-            }
-        }
+        const files = items
+            .filter((item) => item.isFile())
+            .map((file) => ({ Name: file.name, Type: "file" }))
+            .sort((a, b) => a.Name.localeCompare(b.Name));
 
-        directories.sort((a, b) => a.Name.localeCompare(b.Name));
-
-        console.table(directories);
+        console.table([...directories, ...files]);
     } catch {
         console.log("Operation failed");
     }
